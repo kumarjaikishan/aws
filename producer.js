@@ -12,27 +12,23 @@ const emailQueue = new Queue('battlefiesta_queue', {
     // connection: new IORedis(process.env.REDIS_URIfulle, {
     //     maxmemoryPolicy: 'noeviction'
     // }),
-    limiter: {
-        max: 100,
-        duration: 1000 * 60 * 60,
-    },
     defaultJobOptions: {
-        delay: 2000,
+        delay: 1000,
+        removeOnComplete: 500,
+        removeOnFail: 1000,
         attempts: 2,
-        removeOnComplete: true,
         backoff: {
             type: 'exponential',
-            delay: 2000
-        }
-    }
+            delay: 1000,
+        },
+    },
 });
 
 async function addJobToQueue(email, subject, body) {
-    const res = await emailQueue.add('battlefiesta_queue', {
-        email,
-        subject,
-        body
-    })
+    const res = await emailQueue.add(
+        'battlefiesta_queue',
+        { email, subject, body },
+    )
     console.log("Email job added to queue", res.id);
 }
 
