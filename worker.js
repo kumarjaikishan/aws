@@ -12,17 +12,24 @@ async function sendEmail(job) {
     await sendEmailhelper(2);
 }
 
-
 const worker = new Worker('battlefiesta_queue',
     sendEmail,
+    // for online redis cloud connection
+    // {
+    //     connection: new IORedis(process.env.REDIS_URIfulle, {
+    //         maxRetriesPerRequest: null,
+    //     }),
+
+    //for offline redis version
     {
-        connection: new IORedis(process.env.REDIS_URIfulle, {
-            maxRetriesPerRequest: null,
-        }),
+        connection: {
+            host: '127.0.0.1',
+            port: '6379'
+        }
     });
 
 worker.on('completed', job => {
-    console.log(`${job.id} has completed- Email`);
+    console.log(`Job: ${job.id} has completed- Email`);
 })
 
 worker.on('failed', (job, err) => {

@@ -22,7 +22,6 @@ app.post('/producer', async (req, res) => {
             message: error
         })
     }
-
 })
 app.listen(port, () => {
     console.log(`server listening at ${port}`);
